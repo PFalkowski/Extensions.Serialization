@@ -110,6 +110,60 @@ namespace Extensions.Serialization.Test
             Assert.Equal(expected2, csv2);
             Assert.Equal(expected3, csv3);
         }
+
+        [Fact]
+        public void WriteToNewArray0()
+        {
+            int[] ints = null;
+            var emptyDeclaration = ints.WriteToNewArray<int>();
+        }
+
+        [Fact]
+        public void WriteToNewArray1()
+        {
+            string s;
+            var ints = new int[0];
+            s = ((IEnumerable<int>)ints).WriteToNewArray<int>();
+            Assert.Equal<string>("Int32[] array = new Int32[] {};", s);
+        }
+
+        [Fact]
+        public void WriteToNewArray2()
+        {
+            string s;
+            var ints = new int[1];
+            s = ((IEnumerable<int>)ints).WriteToNewArray<int>();
+            Assert.Equal<string>("Int32[] array = new Int32[] {0};", s);
+        }
+
+        [Fact]
+        public void WriteToNewArray3()
+        {
+            string s;
+            var ints = new[] { 1, 2, 3 };
+            s = ((IEnumerable<int>)ints).WriteToNewArray<int>();
+            Assert.Equal<string>("Int32[] array = new Int32[] {1,2,3};", s);
+        }
+
+        [Fact]
+        public void WriteToNewArray4()
+        {
+            string s;
+            var arr = new[] { "abc", "d", "" };
+            s = arr.WriteToNewArray();
+            Assert.Equal<string>("String[] array = new String[] {\"abc\",\"d\",\"\"};", s);
+        }
+
+        [Fact]
+        public void WriteToNewArray5()
+        {
+            string s;
+            var arr = new[] { 'a', 'd', '\\' };
+            s = arr.WriteToNewArray();
+            Assert.Equal<string>("Char[] array = new Char[] {\'a\',\'d\',\'\\\'};", s);
+        }
+
+
         #region Mocks
 
         public sealed class Person

@@ -50,7 +50,9 @@ namespace Extensions.Serialization
             var result = new XDocument();
             using (var writer = result.CreateWriter())
             {
-                var serializer = new XmlSerializer(source.GetType()); // use .GetType() instead of typeof(T) http://stackoverflow.com/a/2434558/3922292
+                var serializer =
+                    new XmlSerializer(source
+                        .GetType()); // use .GetType() instead of typeof(T) http://stackoverflow.com/a/2434558/3922292
                 serializer.Serialize(writer, source);
             }
             return result;
@@ -62,6 +64,53 @@ namespace Extensions.Serialization
             {
                 var deserializer = new XmlSerializer(typeof(T));
                 return (T)deserializer.Deserialize(reader);
+            }
+        }
+
+
+        public static string WriteToNewArray<T>(this IEnumerable<T> input)
+        {
+            var typeName = typeof(T).Name;
+            var begining = $"{typeName}[] array = new {typeName}[] {{";
+            const string end = "};";
+
+            switch (typeName)
+            {
+                case "Char":
+                case "char":
+                    return $"{begining}{input.ToCsv(',', '\'')}{end}";
+                case "String":
+                case "string":
+                    return $"{begining}{input.ToCsv(',', '\"')}{end}";
+                default:
+                    return $"{begining}{input.ToCsv()}{end}";
+            }
+        }
+        /// <summary>
+        /// Use in code generation to turn <paramref name="input"/> into declaration of array of <typeparam>T</typeparam>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="info"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static string WriteToNewArray<T>(this IEnumerable<T> input, CultureInfo info, string format = "G")
+            where T : IFormattable
+        {
+            var typeName = typeof(T).Name;
+            var begining = $"{typeName}[] array = new {typeName}[] {{";
+            const string end = "};";
+
+            switch (typeName)
+            {
+                case "Char":
+                case "char":
+                    return $"{begining}{input.ToCsv(info, format, ',', '\'')}{end}";
+                case "String":
+                case "string":
+                    return $"{begining}{input.ToCsv(info, format, ',', '\"')}{end}";
+                default:
+                    return $"{begining}{input.ToCsv(info, format)}{end}";
             }
         }
     }
