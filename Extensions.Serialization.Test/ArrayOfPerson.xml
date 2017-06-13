@@ -1,0 +1,22 @@
+<ArrayOfPerson xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Person>
+    <FirstName>Alex</FirstName>
+    <LastName>Friedman</LastName>
+    <Age>27</Age>
+  </Person>
+  <Person>
+    <FirstName>Jack</FirstName>
+    <LastName>Bauer</LastName>
+    <Age>45</Age>
+  </Person>
+  <Person>
+    <FirstName>Cloe</FirstName>
+    <LastName>O'Brien</LastName>
+    <Age>35</Age>
+  </Person>
+  <Person>
+    <FirstName>John</FirstName>
+    <LastName>Doe</LastName>
+    <Age>30</Age>
+  </Person>
+</ArrayOfPerson>
