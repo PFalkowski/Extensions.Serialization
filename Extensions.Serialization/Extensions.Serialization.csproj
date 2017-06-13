@@ -6,7 +6,7 @@
     <Authors>Piotr Falkowski</Authors>
     <Copyright>Piotr Falkowski © 2017</Copyright>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-    <Description>Package for boilerplate serialization code, containing following extensions: ToCsv, SerializeToXDoc, Deserialize.</Description>
+    <Description>Package for boilerplate serialization code, containing following extensions: SerializeToXDoc, Deserialize, ToCsv.</Description>
   </PropertyGroup>
 
   <ItemGroup>

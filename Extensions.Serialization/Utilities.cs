@@ -39,17 +39,18 @@ namespace Extensions.Serialization
             {
                 csv.AppendFormat("{0}{1}{2}{3}", quotation, value.ToString(format, info), quotation, separator);
             }
-            return csv.Length != 0 ? csv.ToString(0, csv.Length - 1) : string.Empty;
+            if (csv.Length != 0)
+                return csv.ToString(0, csv.Length - 1);
+            return string.Empty;
         }
 
 
         public static XDocument SerializeToXDoc<T>(this T source)
-            where T : new()
         {
             var result = new XDocument();
-            var serializer = new XmlSerializer(source.GetType()); // use .GetType() instead of typeof(T) http://stackoverflow.com/a/2434558/3922292
             using (var writer = result.CreateWriter())
             {
+                var serializer = new XmlSerializer(source.GetType()); // use .GetType() instead of typeof(T) http://stackoverflow.com/a/2434558/3922292
                 serializer.Serialize(writer, source);
             }
             return result;

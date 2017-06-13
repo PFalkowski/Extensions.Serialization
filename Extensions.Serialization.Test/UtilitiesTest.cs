@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Xml.Linq;
 using Xunit;
 
@@ -11,17 +12,75 @@ namespace Extensions.Serialization.Test
     public class UtilitiesTest
     {
         [Fact]
-        public void ToCsvTest1()
+        public void SerializeToXDocTest()
+        {
+            var tested = PersonList.SerializeToXDoc();
+
+            var firstNames = new HashSet<string>(from e in tested.Descendants("FirstName") select e.Value);
+            var ages = new HashSet<int>(from e in tested.Descendants("Age") select int.Parse(e.Value));
+
+            Assert.Equal(4, firstNames.Count);
+            Assert.Equal(4, ages.Count);
+            Assert.True(firstNames.Contains("Alex"));
+            Assert.True(firstNames.Contains("Cloe"));
+            Assert.True(firstNames.Contains("Jack"));
+            Assert.True(firstNames.Contains("John"));
+            Assert.True(ages.Contains(27));
+            Assert.True(ages.Contains(35));
+            Assert.True(ages.Contains(45));
+            Assert.True(ages.Contains(30));
+        }
+
+        [Fact]
+        public void DeserializeXDoc()
+        {
+            var input = XDocument.Parse(Properties.Resources.ArrayOfPerson);
+            var received = input.Deserialize<List<Person>>();
+
+            Assert.Equal(4, received.Count);
+            Assert.Equal(27, received[0].Age);
+            Assert.Equal(45, received[1].Age);
+            Assert.Equal(35, received[2].Age);
+            Assert.Equal(30, received[3].Age);
+        }
+
+        [Fact]
+        public void ToCsvNoCustomization()
         {
             var values = new[] { 1, 2, 3, 4, 5 };
 
             var csv = values.ToCsv(',', null);
-            var csv2 = values.ToCsv(';', '\"');
 
             Assert.Equal("1,2,3,4,5", csv);
-            Assert.Equal("\"1\";\"2\";\"3\";\"4\";\"5\"", csv2);
+        }
+        [Fact]
+        public void ToCsvWithCustomSeparator()
+        {
+            var values = new[] { 1, 2, 3, 4, 5 };
+
+            var csv = values.ToCsv(';', '\"');
+
+            Assert.Equal("\"1\";\"2\";\"3\";\"4\";\"5\"", csv);
+        }
+        [Fact]
+        public void ToCsvWithQutation()
+        {
+            var values = new[] { 1, 2, 3, 4, 5 };
+
+            var csv = values.ToCsv(',', '\"');
+
+            Assert.Equal("\"1\",\"2\",\"3\",\"4\",\"5\"", csv);
         }
 
+        [Fact]
+        public void ToCsvWithSeparatorAndQuotation()
+        {
+            var values = new[] { 1, 2, 3, 4, 5 };
+
+            var csv = values.ToCsv(';', '\"');
+
+            Assert.Equal("\"1\";\"2\";\"3\";\"4\";\"5\"", csv);
+        }
         [Fact]
         public void ToCsvTestInvariantCulture()
         {
@@ -52,31 +111,6 @@ namespace Extensions.Serialization.Test
             Assert.Equal(expected1, csv);
             Assert.Equal(expected2, csv2);
             Assert.Equal(expected3, csv3);
-        }
-
-        [Fact]
-        public void SerializeToXDocTest()
-        {
-            var tested = PersonList.SerializeToXDoc();
-            Trace.WriteLine($"Received: {tested}");
-            foreach (var person in PersonList)
-            {
-                Assert.True(tested.ToString().Contains(person.FirstName));
-                Assert.True(tested.ToString().Contains(person.LastName));
-                Assert.True(tested.ToString().Contains(person.Age.ToString()));
-            }
-        }
-        [Fact]
-        public void DeserializeXDoc()
-        {
-            var input = XDocument.Parse(Properties.Resources.ArrayOfPerson);
-            var received = input.Deserialize<List<Person>>();
-
-            Assert.Equal(4, received.Count);
-            Assert.Equal(27, received[0].Age);
-            Assert.Equal(45, received[1].Age);
-            Assert.Equal(35, received[2].Age);
-            Assert.Equal(30, received[3].Age);
         }
         #region Mocks
 
