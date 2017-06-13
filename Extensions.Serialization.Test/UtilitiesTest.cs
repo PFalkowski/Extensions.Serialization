@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
@@ -49,7 +47,7 @@ namespace Extensions.Serialization.Test
         {
             var values = new[] { 1, 2, 3, 4, 5 };
 
-            var csv = values.ToCsv(',', null);
+            var csv = values.ToCsv();
 
             Assert.Equal("1,2,3,4,5", csv);
         }
@@ -86,7 +84,7 @@ namespace Extensions.Serialization.Test
         {
             var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
 
-            var csv = values.ToCsv(CultureInfo.InvariantCulture, "G", ',', null);
+            var csv = values.ToCsv(CultureInfo.InvariantCulture);
             var csv2 = values.ToCsv(CultureInfo.InvariantCulture, "G", ';', '\"');
 
             var expected1 = "1.123,2.123,3.234,4.532,5.723";
@@ -102,7 +100,7 @@ namespace Extensions.Serialization.Test
         {
             var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
             var plCulture = new CultureInfo("pl-PL");
-            var csv = values.ToCsv(plCulture, "G", ',', null);
+            var csv = values.ToCsv(plCulture);
             var csv2 = values.ToCsv(plCulture, "G", ';', '\"');
             var csv3 = values.ToCsv(plCulture, "F1", ';', '\"');
             var expected1 = "1,123,2,123,3,234,4,532,5,723";
