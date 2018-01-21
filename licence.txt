@@ -19,3 +19,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+The third party Library CsvHelper https://github.com/JoshClose/CsvHelper uses dual licensing under MS-PL and Apache 2.0:
+
+Microsoft Public License (MS-PL)
+
+http://www.opensource.org/licenses/MS-PL
+
+Apache License, Version 2.0
+
+http://opensource.org/licenses/Apache-2.0
