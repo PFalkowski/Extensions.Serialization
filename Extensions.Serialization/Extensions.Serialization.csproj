@@ -10,9 +10,9 @@
     <PackageProjectUrl>https://github.com/PFalkowski/Extensions.Serialization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/PFalkowski/Extensions.Serialization</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>2.0.0</Version>
+    <Version>3.0.0</Version>
     <PackageTags>serialization,netcore,netstandard,xml,csv,extension-methods</PackageTags>
-    <PackageReleaseNotes>Upgrade to .NET Standard 2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Change the API. Now the "ToCsv()" serializes one object per line. Old method renamed to "ToCsvLine".</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,17 +13,18 @@ namespace Extensions.Serialization.Test
         [Fact]
         public void SerializeToXDocTest()
         {
-            var tested = PersonList.SerializeToXDoc();
+            var tested = PersonsList.SerializeToXDoc();
 
             var firstNames = new HashSet<string>(from e in tested.Descendants("FirstName") select e.Value);
             var ages = new HashSet<int>(from e in tested.Descendants("Age") select int.Parse(e.Value));
 
-            Assert.Equal(4, firstNames.Count);
-            Assert.Equal(4, ages.Count);
+            Assert.Equal(5, firstNames.Count);
+            Assert.Equal(5, ages.Count);
             Assert.True(firstNames.Contains("Alex"));
             Assert.True(firstNames.Contains("Cloe"));
             Assert.True(firstNames.Contains("Jack"));
             Assert.True(firstNames.Contains("John"));
+            Assert.True(firstNames.Contains("Grace"));
             Assert.True(ages.Contains(27));
             Assert.True(ages.Contains(35));
             Assert.True(ages.Contains(45));
@@ -47,7 +49,7 @@ namespace Extensions.Serialization.Test
         {
             var values = new[] { 1, 2, 3, 4, 5 };
 
-            var csv = values.ToCsv();
+            var csv = values.ToCsvLine();
 
             Assert.Equal("1,2,3,4,5", csv);
         }
@@ -56,7 +58,7 @@ namespace Extensions.Serialization.Test
         {
             var values = new[] { 1, 2, 3, 4, 5 };
 
-            var csv = values.ToCsv(';', '\"');
+            var csv = values.ToCsvLine(';', '\"');
 
             Assert.Equal("\"1\";\"2\";\"3\";\"4\";\"5\"", csv);
         }
@@ -65,7 +67,7 @@ namespace Extensions.Serialization.Test
         {
             var values = new[] { 1, 2, 3, 4, 5 };
 
-            var csv = values.ToCsv(',', '\"');
+            var csv = values.ToCsvLine(',', '\"');
 
             Assert.Equal("\"1\",\"2\",\"3\",\"4\",\"5\"", csv);
         }
@@ -75,7 +77,7 @@ namespace Extensions.Serialization.Test
         {
             var values = new[] { 1, 2, 3, 4, 5 };
 
-            var csv = values.ToCsv(';', '\"');
+            var csv = values.ToCsvLine(';', '\"');
 
             Assert.Equal("\"1\";\"2\";\"3\";\"4\";\"5\"", csv);
         }
@@ -84,8 +86,8 @@ namespace Extensions.Serialization.Test
         {
             var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
 
-            var csv = values.ToCsv(CultureInfo.InvariantCulture);
-            var csv2 = values.ToCsv(CultureInfo.InvariantCulture, "G", ';', '\"');
+            var csv = values.ToCsvLine(CultureInfo.InvariantCulture);
+            var csv2 = values.ToCsvLine(CultureInfo.InvariantCulture, "G", ';', '\"');
 
             var expected1 = "1.123,2.123,3.234,4.532,5.723";
             var expected2 = @"""1.123"";""2.123"";""3.234"";""4.532"";""5.723""";
@@ -96,13 +98,13 @@ namespace Extensions.Serialization.Test
         }
 
         [Fact]
-        public void ToCsvTest2()
+        public void ToCsvLineTest2()
         {
             var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
             var plCulture = new CultureInfo("pl-PL");
-            var csv = values.ToCsv(plCulture);
-            var csv2 = values.ToCsv(plCulture, "G", ';', '\"');
-            var csv3 = values.ToCsv(plCulture, "F1", ';', '\"');
+            var csv = values.ToCsvLine(plCulture);
+            var csv2 = values.ToCsvLine(plCulture, "G", ';', '\"');
+            var csv3 = values.ToCsvLine(plCulture, "F1", ';', '\"');
             var expected1 = "1,123,2,123,3,234,4,532,5,723";
             var expected2 = @"""1,123"";""2,123"";""3,234"";""4,532"";""5,723""";
             var expected3 = @"""1,1"";""2,1"";""3,2"";""4,5"";""5,7""";
@@ -111,6 +113,15 @@ namespace Extensions.Serialization.Test
             Assert.Equal(expected3, csv3);
         }
 
+        [Fact]
+        public void ToCsvTest2()
+        {
+            var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
+            var plCulture = new CultureInfo("pl-PL");
+            var csv = values.ToCsv();
+            var expected = "\"1,123\"\r\n\"2,123\"\r\n\"3,234\"\r\n\"4,532\"\r\n\"5,723\"\r\n";
+            Assert.Equal(expected, csv.ToString());
+        }
         [Fact]
         public void WriteToNewArray0()
         {
@@ -164,6 +175,39 @@ namespace Extensions.Serialization.Test
         }
 
 
+        [Fact]
+        public void FromCsvDeserializesProperly()
+        {
+            var tested = @"""FirstName"",""LastName"",""Age""
+""Grace"",""Hopper"",""10""";
+            //var tested = "\"Grace\",\"Hopper\", \"10\"";
+            var deserialized = tested.FromCsv<Person>();
+        }
+
+        [Fact]
+        public void ToCsvDSrializesProperlyWithDefaults()
+        {
+            var tested = PersonsList;
+            var serialized = tested.ToCsv();
+
+            Assert.Equal("FirstName,LastName,Age\r\nAlex,Friedman,27\r\nJack,Bauer,45\r\nCloe,O'Brien,35\r\nJohn,Doe,30\r\nGrace,Hooper,111\r\n", serialized.ToString());
+        }
+        [Fact]
+        public void ToCsvDSrializesProperlyWithCustomSeparator()
+        {
+            var tested = PersonsList;
+            var serialized = tested.ToCsv("*");
+
+            Assert.Equal("FirstName*LastName*Age\r\nAlex*Friedman*27\r\nJack*Bauer*45\r\nCloe*O'Brien*35\r\nJohn*Doe*30\r\nGrace*Hooper*111\r\n", serialized.ToString());
+        }
+        [Fact]
+        public void ToCsvDeSrializesProperlyWithCustomQuotation()
+        {
+            var tested = PersonsList;
+            var serialized = tested.ToCsv(",", '"');
+
+            Assert.Equal("\"FirstName\",\"LastName\",\"Age\"\r\n\"Alex\",\"Friedman\",\"27\"\r\n\"Jack\",\"Bauer\",\"45\"\r\n\"Cloe\",\"O'Brien\",\"35\"\r\n\"John\",\"Doe\",\"30\"\r\n\"Grace\",\"Hooper\",\"111\"\r\n", serialized.ToString());
+        }
         #region Mocks
 
         public sealed class Person
@@ -174,7 +218,7 @@ namespace Extensions.Serialization.Test
         }
 
 
-        private List<Person> PersonList => new List<Person>
+        private List<Person> PersonsList { get; } = new List<Person>
         {
             new Person
             {
@@ -187,7 +231,6 @@ namespace Extensions.Serialization.Test
                 FirstName = "Jack",
                 LastName = "Bauer",
                 Age = 45
-
             },
             new Person
             {
@@ -200,6 +243,12 @@ namespace Extensions.Serialization.Test
                 FirstName = "John",
                 LastName = "Doe",
                 Age = 30
+            },
+            new Person
+            {
+                FirstName = "Grace",
+                LastName = "Hooper",
+                Age = (int) (DateTime.Now - new DateTime(1906, 12, 9)).TotalDays / 365
             }
         };
 
