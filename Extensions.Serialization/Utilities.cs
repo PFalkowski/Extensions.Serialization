@@ -7,12 +7,13 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace Extensions.Serialization
 {
     public static partial class Utilities
     {
-        public static string ToCsvLine<T>(this IEnumerable<T> input, char separator = ',', char? quotation = null)
+        private static string ToCsvLine<T>(this IEnumerable<T> input, char separator = ',', char? quotation = null)
         {
             if (input == null) return null;
             var csv = new StringBuilder();
@@ -25,7 +26,7 @@ namespace Extensions.Serialization
             return string.Empty;
         }
 
-        public static string ToCsvLine<T>(this IEnumerable<T> input, CultureInfo info, string format = "G",
+        private static string ToCsvLine<T>(this IEnumerable<T> input, CultureInfo info, string format = "G",
             char separator = ',', char? quotation = null) where T : IFormattable
         {
             if (input == null) return null;
@@ -39,7 +40,13 @@ namespace Extensions.Serialization
             return string.Empty;
         }
 
-        public static StringBuilder ToCsv<T>(this IEnumerable<T> input, string separator = ",", char? quotation = null, CultureInfo info = null)
+        public static string SerializeToCsv<T>(this IEnumerable<T> input, string separator = ",", char? quotation = null, CultureInfo info = null)
+        {
+            return SerializeToCsv(input, null, separator, quotation, info);
+        }
+
+        public static string SerializeToCsv<T>(this IEnumerable<T> input, ClassMap<T> propertiesMap, string separator = ",",
+            char? quotation = null, CultureInfo info = null)
         {
             if (input == null) return null;
             var stb = new StringBuilder();
@@ -61,27 +68,22 @@ namespace Extensions.Serialization
                     writer.Configuration.CultureInfo = info;
                 }
 
+                if (propertiesMap != null)
+                {
+                    writer.Configuration.RegisterClassMap(propertiesMap);
+                }
                 writer.WriteRecords(input);
                 writer.Flush();
             }
-            return stb;
+            return stb.ToString();
         }
 
-        public static IEnumerable<T> FromCsv<T>(this FileInfo file)
-        {
-            IEnumerable<T> result;
-            using (var csv = new CsvReader(new StreamReader(file.FullName), false))
-            {
-                result = csv.GetRecords<T>();
-            }
-            return result;
-        }
-
-        public static IEnumerable<T> FromCsv<T>(this string csvContents)
+        public static IEnumerable<T> DeserializeFromCsv<T>(this string csvContents, ClassMap<T> propertiesMap = null)
         {
             IEnumerable<T> result;
             using (var csv = new CsvReader(new StringReader(csvContents), false))
             {
+                if (propertiesMap != null) { csv.Configuration.RegisterClassMap(propertiesMap); }
                 result = csv.GetRecords<T>().ToList();
             }
             return result;
@@ -110,7 +112,12 @@ namespace Extensions.Serialization
             }
         }
 
-
+        /// <summary>
+        /// Use in code generation to turn <paramref name="input"/> into declaration of array of <typeparam>T</typeparam>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static string WriteToNewArray<T>(this IEnumerable<T> input)
         {
             var typeName = typeof(T).Name;
@@ -129,6 +136,7 @@ namespace Extensions.Serialization
                     return $"{begining}{input.ToCsvLine()}{end}";
             }
         }
+
         /// <summary>
         /// Use in code generation to turn <paramref name="input"/> into declaration of array of <typeparam>T</typeparam>
         /// </summary>
@@ -140,6 +148,8 @@ namespace Extensions.Serialization
         public static string WriteToNewArray<T>(this IEnumerable<T> input, CultureInfo info, string format = "G")
             where T : IFormattable
         {
+            if (info == null) info = CultureInfo.CurrentCulture;
+
             var typeName = typeof(T).Name;
             var begining = $"{typeName}[] array = new {typeName}[] {{";
             const string end = "};";

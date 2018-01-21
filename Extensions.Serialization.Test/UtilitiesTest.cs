@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
+using CsvHelper.Configuration;
 using Xunit;
 
 namespace Extensions.Serialization.Test
@@ -43,82 +44,13 @@ namespace Extensions.Serialization.Test
             Assert.Equal(35, received[2].Age);
             Assert.Equal(30, received[3].Age);
         }
-
-        [Fact]
-        public void ToCsvNoCustomization()
-        {
-            var values = new[] { 1, 2, 3, 4, 5 };
-
-            var csv = values.ToCsvLine();
-
-            Assert.Equal("1,2,3,4,5", csv);
-        }
-        [Fact]
-        public void ToCsvWithCustomSeparator()
-        {
-            var values = new[] { 1, 2, 3, 4, 5 };
-
-            var csv = values.ToCsvLine(';', '\"');
-
-            Assert.Equal("\"1\";\"2\";\"3\";\"4\";\"5\"", csv);
-        }
-        [Fact]
-        public void ToCsvWithQutation()
-        {
-            var values = new[] { 1, 2, 3, 4, 5 };
-
-            var csv = values.ToCsvLine(',', '\"');
-
-            Assert.Equal("\"1\",\"2\",\"3\",\"4\",\"5\"", csv);
-        }
-
-        [Fact]
-        public void ToCsvWithSeparatorAndQuotation()
-        {
-            var values = new[] { 1, 2, 3, 4, 5 };
-
-            var csv = values.ToCsvLine(';', '\"');
-
-            Assert.Equal("\"1\";\"2\";\"3\";\"4\";\"5\"", csv);
-        }
-        [Fact]
-        public void ToCsvTestInvariantCulture()
-        {
-            var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
-
-            var csv = values.ToCsvLine(CultureInfo.InvariantCulture);
-            var csv2 = values.ToCsvLine(CultureInfo.InvariantCulture, "G", ';', '\"');
-
-            var expected1 = "1.123,2.123,3.234,4.532,5.723";
-            var expected2 = @"""1.123"";""2.123"";""3.234"";""4.532"";""5.723""";
-
-
-            Assert.Equal(expected1, csv);
-            Assert.Equal(expected2, csv2);
-        }
-
-        [Fact]
-        public void ToCsvLineTest2()
-        {
-            var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
-            var plCulture = new CultureInfo("pl-PL");
-            var csv = values.ToCsvLine(plCulture);
-            var csv2 = values.ToCsvLine(plCulture, "G", ';', '\"');
-            var csv3 = values.ToCsvLine(plCulture, "F1", ';', '\"');
-            var expected1 = "1,123,2,123,3,234,4,532,5,723";
-            var expected2 = @"""1,123"";""2,123"";""3,234"";""4,532"";""5,723""";
-            var expected3 = @"""1,1"";""2,1"";""3,2"";""4,5"";""5,7""";
-            Assert.Equal(expected1, csv);
-            Assert.Equal(expected2, csv2);
-            Assert.Equal(expected3, csv3);
-        }
-
+        
         [Fact]
         public void ToCsvTest2()
         {
             var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
             var plCulture = new CultureInfo("pl-PL");
-            var csv = values.ToCsv();
+            var csv = values.SerializeToCsv();
             var expected = "\"1,123\"\r\n\"2,123\"\r\n\"3,234\"\r\n\"4,532\"\r\n\"5,723\"\r\n";
             Assert.Equal(expected, csv.ToString());
         }
@@ -181,14 +113,14 @@ namespace Extensions.Serialization.Test
             var tested = @"""FirstName"",""LastName"",""Age""
 ""Grace"",""Hopper"",""10""";
             //var tested = "\"Grace\",\"Hopper\", \"10\"";
-            var deserialized = tested.FromCsv<Person>();
+            var deserialized = tested.DeserializeFromCsv<Person>();
         }
 
         [Fact]
         public void ToCsvDSrializesProperlyWithDefaults()
         {
             var tested = PersonsList;
-            var serialized = tested.ToCsv();
+            var serialized = tested.SerializeToCsv();
 
             Assert.Equal("FirstName,LastName,Age\r\nAlex,Friedman,27\r\nJack,Bauer,45\r\nCloe,O'Brien,35\r\nJohn,Doe,30\r\nGrace,Hooper,111\r\n", serialized.ToString());
         }
@@ -196,7 +128,7 @@ namespace Extensions.Serialization.Test
         public void ToCsvDSrializesProperlyWithCustomSeparator()
         {
             var tested = PersonsList;
-            var serialized = tested.ToCsv("*");
+            var serialized = tested.SerializeToCsv("*");
 
             Assert.Equal("FirstName*LastName*Age\r\nAlex*Friedman*27\r\nJack*Bauer*45\r\nCloe*O'Brien*35\r\nJohn*Doe*30\r\nGrace*Hooper*111\r\n", serialized.ToString());
         }
@@ -204,9 +136,52 @@ namespace Extensions.Serialization.Test
         public void ToCsvDeSrializesProperlyWithCustomQuotation()
         {
             var tested = PersonsList;
-            var serialized = tested.ToCsv(",", '"');
+            var serialized = tested.SerializeToCsv(",", '"');
 
             Assert.Equal("\"FirstName\",\"LastName\",\"Age\"\r\n\"Alex\",\"Friedman\",\"27\"\r\n\"Jack\",\"Bauer\",\"45\"\r\n\"Cloe\",\"O'Brien\",\"35\"\r\n\"John\",\"Doe\",\"30\"\r\n\"Grace\",\"Hooper\",\"111\"\r\n", serialized.ToString());
+        }
+
+        private class PersonMaping : ClassMap<Person>
+        {
+            public PersonMaping()
+            {
+                Map(m => m.FirstName).Name("forename");
+                Map(m => m.LastName).Name("surname"); ;
+                Map(m => m.Age).Name("age");
+            }
+        }
+
+        [Fact]
+        public void ToCsvSerializesProperlyWithCustomMapping()
+        {
+            var tested = PersonsList;
+            var serialized = tested.SerializeToCsv(new PersonMaping(), ",", '"');
+
+            Assert.Equal("\"forename\",\"surname\",\"age\"\r\n\"Alex\",\"Friedman\",\"27\"\r\n\"Jack\",\"Bauer\",\"45\"\r\n\"Cloe\",\"O'Brien\",\"35\"\r\n\"John\",\"Doe\",\"30\"\r\n\"Grace\",\"Hooper\",\"111\"\r\n", serialized.ToString());
+        }
+        [Fact]
+        public void ToCsvDeserializesProperlyWithCustomMapping()
+        {
+            var tested =
+                "\"forename\",\"surname\",\"age\"\r\n\"Alex\",\"Friedman\",\"27\"\r\n\"Jack\",\"Bauer\",\"45\"\r\n\"Cloe\",\"O'Brien\",\"35\"\r\n\"John\",\"Doe\",\"30\"\r\n\"Grace\",\"Hooper\",\"111\"\r\n";
+            var serialized = tested.DeserializeFromCsv(new PersonMaping()).ToList();
+
+            Assert.Equal(serialized[0].FirstName, "Alex");
+            Assert.Equal(serialized[0].LastName, "Friedman");
+            Assert.Equal(serialized[0].Age, 27);
+            Assert.Equal(serialized[1].FirstName, "Jack");
+            Assert.Equal(serialized[1].LastName, "Bauer");
+            Assert.Equal(serialized[1].Age, 45);
+            Assert.Equal(serialized[2].FirstName, "Cloe");
+            Assert.Equal(serialized[2].LastName, "O'Brien");
+            Assert.Equal(serialized[2].Age, 35);
+            Assert.Equal(serialized[3].FirstName, "John");
+            Assert.Equal(serialized[3].LastName, "Doe");
+            Assert.Equal(serialized[3].Age, 30);
+            Assert.Equal(serialized[4].FirstName, "Grace");
+            Assert.Equal(serialized[4].LastName, "Hooper");
+            Assert.Equal(serialized[4].Age, 111);
+
         }
         #region Mocks
 
