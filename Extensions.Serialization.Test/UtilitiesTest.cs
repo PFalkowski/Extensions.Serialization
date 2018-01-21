@@ -21,15 +21,15 @@ namespace Extensions.Serialization.Test
 
             Assert.Equal(5, firstNames.Count);
             Assert.Equal(5, ages.Count);
-            Assert.True(firstNames.Contains("Alex"));
-            Assert.True(firstNames.Contains("Cloe"));
-            Assert.True(firstNames.Contains("Jack"));
-            Assert.True(firstNames.Contains("John"));
-            Assert.True(firstNames.Contains("Grace"));
-            Assert.True(ages.Contains(27));
-            Assert.True(ages.Contains(35));
-            Assert.True(ages.Contains(45));
-            Assert.True(ages.Contains(30));
+            Assert.Contains("Alex", firstNames);
+            Assert.Contains("Cloe", firstNames);
+            Assert.Contains("Jack", firstNames);
+            Assert.Contains("John", firstNames);
+            Assert.Contains("Grace", firstNames);
+            Assert.Contains(27, ages);
+            Assert.Contains(35, ages);
+            Assert.Contains(45, ages);
+            Assert.Contains(30, ages);
         }
 
         [Fact]
@@ -49,16 +49,15 @@ namespace Extensions.Serialization.Test
         public void ToCsvTest2()
         {
             var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
-            var plCulture = new CultureInfo("pl-PL");
             var csv = values.SerializeToCsv();
-            var expected = "\"1,123\"\r\n\"2,123\"\r\n\"3,234\"\r\n\"4,532\"\r\n\"5,723\"\r\n";
+            const string expected = "\"1,123\"\r\n\"2,123\"\r\n\"3,234\"\r\n\"4,532\"\r\n\"5,723\"\r\n";
             Assert.Equal(expected, csv.ToString());
         }
         [Fact]
         public void WriteToNewArray0()
         {
             int[] ints = null;
-            var emptyDeclaration = ints.WriteToNewArray<int>();
+            var emptyDeclaration = ints.WriteToNewArray();
         }
 
         [Fact]
@@ -66,8 +65,8 @@ namespace Extensions.Serialization.Test
         {
             string s;
             var ints = new int[0];
-            s = ((IEnumerable<int>)ints).WriteToNewArray<int>();
-            Assert.Equal<string>("Int32[] array = new Int32[] {};", s);
+            s = ints.WriteToNewArray();
+            Assert.Equal("Int32[] array = new Int32[] {};", s);
         }
 
         [Fact]
@@ -75,8 +74,8 @@ namespace Extensions.Serialization.Test
         {
             string s;
             var ints = new int[1];
-            s = ((IEnumerable<int>)ints).WriteToNewArray<int>();
-            Assert.Equal<string>("Int32[] array = new Int32[] {0};", s);
+            s = ints.WriteToNewArray();
+            Assert.Equal("Int32[] array = new Int32[] {0};", s);
         }
 
         [Fact]
@@ -84,8 +83,8 @@ namespace Extensions.Serialization.Test
         {
             string s;
             var ints = new[] { 1, 2, 3 };
-            s = ((IEnumerable<int>)ints).WriteToNewArray<int>();
-            Assert.Equal<string>("Int32[] array = new Int32[] {1,2,3};", s);
+            s = ints.WriteToNewArray();
+            Assert.Equal("Int32[] array = new Int32[] {1,2,3};", s);
         }
 
         [Fact]
@@ -94,7 +93,7 @@ namespace Extensions.Serialization.Test
             string s;
             var arr = new[] { "abc", "d", "" };
             s = arr.WriteToNewArray();
-            Assert.Equal<string>("String[] array = new String[] {\"abc\",\"d\",\"\"};", s);
+            Assert.Equal("String[] array = new String[] {\"abc\",\"d\",\"\"};", s);
         }
 
         [Fact]
@@ -103,7 +102,7 @@ namespace Extensions.Serialization.Test
             string s;
             var arr = new[] { 'a', 'd', '\\' };
             s = arr.WriteToNewArray();
-            Assert.Equal<string>("Char[] array = new Char[] {\'a\',\'d\',\'\\\'};", s);
+            Assert.Equal("Char[] array = new Char[] {\'a\',\'d\',\'\\\'};", s);
         }
 
 
@@ -166,21 +165,21 @@ namespace Extensions.Serialization.Test
                 "\"forename\",\"surname\",\"age\"\r\n\"Alex\",\"Friedman\",\"27\"\r\n\"Jack\",\"Bauer\",\"45\"\r\n\"Cloe\",\"O'Brien\",\"35\"\r\n\"John\",\"Doe\",\"30\"\r\n\"Grace\",\"Hooper\",\"111\"\r\n";
             var serialized = tested.DeserializeFromCsv(new PersonMaping()).ToList();
 
-            Assert.Equal(serialized[0].FirstName, "Alex");
-            Assert.Equal(serialized[0].LastName, "Friedman");
-            Assert.Equal(serialized[0].Age, 27);
-            Assert.Equal(serialized[1].FirstName, "Jack");
-            Assert.Equal(serialized[1].LastName, "Bauer");
-            Assert.Equal(serialized[1].Age, 45);
-            Assert.Equal(serialized[2].FirstName, "Cloe");
-            Assert.Equal(serialized[2].LastName, "O'Brien");
-            Assert.Equal(serialized[2].Age, 35);
-            Assert.Equal(serialized[3].FirstName, "John");
-            Assert.Equal(serialized[3].LastName, "Doe");
-            Assert.Equal(serialized[3].Age, 30);
-            Assert.Equal(serialized[4].FirstName, "Grace");
-            Assert.Equal(serialized[4].LastName, "Hooper");
-            Assert.Equal(serialized[4].Age, 111);
+            Assert.Equal("Alex", serialized[0].FirstName);
+            Assert.Equal("Friedman", serialized[0].LastName);
+            Assert.Equal(27, serialized[0].Age);
+            Assert.Equal("Jack", serialized[1].FirstName);
+            Assert.Equal("Bauer", serialized[1].LastName);
+            Assert.Equal(45, serialized[1].Age);
+            Assert.Equal("Cloe", serialized[2].FirstName);
+            Assert.Equal("O'Brien", serialized[2].LastName);
+            Assert.Equal(35, serialized[2].Age);
+            Assert.Equal("John", serialized[3].FirstName);
+            Assert.Equal("Doe", serialized[3].LastName);
+            Assert.Equal(30, serialized[3].Age);
+            Assert.Equal("Grace", serialized[4].FirstName);
+            Assert.Equal("Hooper", serialized[4].LastName);
+            Assert.Equal(111, serialized[4].Age);
 
         }
         #region Mocks

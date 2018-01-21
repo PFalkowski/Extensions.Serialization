@@ -14,6 +14,7 @@ Third party lib "CsvHelper" licenced under dual licence MS-PL / Apache-2.0: http
     <Version>3.0.0</Version>
     <PackageTags>serialization,netcore,netstandard,xml,csv,extension-methods</PackageTags>
     <PackageReleaseNotes>Change the API. Now the "ToCsv()" serializes one object per line. Old method renamed to "ToCsvLine".</PackageReleaseNotes>
+    <Company />
   </PropertyGroup>
 
   <ItemGroup>
