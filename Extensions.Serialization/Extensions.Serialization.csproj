@@ -6,7 +6,8 @@
     <Authors>Piotr Falkowski</Authors>
     <Copyright>Piotr Falkowski © 2017</Copyright>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-    <Description>Package for boilerplate serialization code, containing following extensions: SerializeToXDoc, Deserialize, ToCsv.</Description>
+    <Description>Package for boilerplate serialization code, containing following extensions: SerializeToXDoc, Deserialize, ToCsv.
+Third party lib "CsvHelper" licenced under dual licence MS-PL / Apache-2.0: http://www.opensource.org/licenses/MS-PL http://opensource.org/licenses/Apache-2.0</Description>
     <PackageProjectUrl>https://github.com/PFalkowski/Extensions.Serialization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/PFalkowski/Extensions.Serialization</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
