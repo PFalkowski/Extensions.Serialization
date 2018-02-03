@@ -4,16 +4,16 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Piotr Falkowski</Authors>
-    <Copyright>Piotr Falkowski © 2017</Copyright>
+    <Copyright>Piotr Falkowski © 2018</Copyright>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <Description>Package for boilerplate serialization code, containing following extensions: SerializeToXDoc, Deserialize, ToCsv.
 Third party lib "CsvHelper" licenced under dual licence MS-PL / Apache-2.0: http://www.opensource.org/licenses/MS-PL http://opensource.org/licenses/Apache-2.0</Description>
     <PackageProjectUrl>https://github.com/PFalkowski/Extensions.Serialization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/PFalkowski/Extensions.Serialization</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.0.0</Version>
+    <Version>3.1.0</Version>
     <PackageTags>serialization,netcore,netstandard,xml,csv,extension-methods</PackageTags>
-    <PackageReleaseNotes>Change the API. Now the "ToCsv()" serializes one object per line. Old method renamed to "ToCsvLine".</PackageReleaseNotes>
+    <PackageReleaseNotes>Add optional parameter to provide culture info. Default is CurrentCulture</PackageReleaseNotes>
     <Company />
   </PropertyGroup>
 

@@ -10,7 +10,6 @@
 
 namespace Extensions.Serialization.Test.Properties {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -20,7 +19,7 @@ namespace Extensions.Serialization.Test.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -40,7 +39,7 @@ namespace Extensions.Serialization.Test.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Extensions.Serialization.Test.Properties.Resources", typeof(Resources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Extensions.Serialization.Test.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -85,6 +84,18 @@ namespace Extensions.Serialization.Test.Properties {
         public static string ArrayOfPerson {
             get {
                 return ResourceManager.GetString("ArrayOfPerson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;TICKER&gt;,&lt;DTYYYYMMDD&gt;,&lt;OPEN&gt;,&lt;HIGH&gt;,&lt;LOW&gt;,&lt;CLOSE&gt;,&lt;VOL&gt;
+        ///testStock,20171110,18.61,18.61,18.61,18.61,51
+        ///testStock,20171120,16.16,16.16,16.16,16.16,51
+        ///.
+        /// </summary>
+        public static string testStock {
+            get {
+                return ResourceManager.GetString("testStock", resourceCulture);
             }
         }
     }

@@ -44,7 +44,7 @@ namespace Extensions.Serialization.Test
             Assert.Equal(35, received[2].Age);
             Assert.Equal(30, received[3].Age);
         }
-        
+
         [Fact]
         public void ToCsvTest2()
         {
@@ -116,6 +116,30 @@ namespace Extensions.Serialization.Test
         }
 
         [Fact]
+        public void ToCsvSerializesProperlyNestedInstances()
+        {
+            var tested = new Account[]
+            {
+                new Account
+                {
+                    Balance = 89123.312,
+                    Owner = PersonsList[3]
+                }
+            };
+
+            var result = tested.SerializeToCsv();
+        }
+
+//        [Fact]
+//        public void FromCsvDeserializesProperly2()
+//        {
+//            var tested = @"""FirstName"",""LastName"",""Age""
+//""Grace"",""Hopper"",""10.0""";
+//            //var tested = "\"Grace\",\"Hopper\", \"10\"";
+//            var deserialized = tested.DeserializeFromCsv<Person>(info: CultureInfo.InvariantCulture);
+//        }
+
+        [Fact]
         public void ToCsvDSrializesProperlyWithDefaults()
         {
             var tested = PersonsList;
@@ -182,7 +206,46 @@ namespace Extensions.Serialization.Test
             Assert.Equal(111, serialized[4].Age);
 
         }
+
+        public sealed class StockQuote
+        {
+            public string Ticker { get; set; }
+            public long Date { get; set; }
+            public double Open { get; set; }
+            public double High { get; set; }
+            public double Low { get; set; }
+            public double Close { get; set; }
+            public double Volume { get; set; }
+        }
+
+        public sealed class StockQuoteCsvClassMap : ClassMap<StockQuote>
+        {
+            public StockQuoteCsvClassMap()
+            {
+                Map(m => m.Ticker).Name("<TICKER>");
+                Map(m => m.Date).Name("<DTYYYYMMDD>");
+                Map(m => m.Open).Name("<OPEN>");
+                Map(m => m.High).Name("<HIGH>");
+                Map(m => m.Low).Name("<LOW>");
+                Map(m => m.Close).Name("<CLOSE>");
+                Map(m => m.Volume).Name("<VOL>");
+            }
+        }
+        [Fact]
+        public void ToCsvDeserializesWithCustomCulture()
+        {
+            var tested =
+                Properties.Resources.testStock.DeserializeFromCsv(new StockQuoteCsvClassMap(),
+                    CultureInfo.InvariantCulture).ToList();
+
+            Assert.Equal(2, tested.Count);
+            Assert.Equal(@"testStock", tested[0].Ticker);
+            Assert.Equal(20171110, tested[0].Date);
+            Assert.Equal(@"testStock", tested[1].Ticker);
+            Assert.Equal(20171120, tested[1].Date);
+        }
         #region Mocks
+
 
         public sealed class Person
         {
@@ -226,6 +289,12 @@ namespace Extensions.Serialization.Test
             }
         };
 
+
+        public sealed class Account
+        {
+            public Person Owner { get; set; }
+            public double Balance { get; set; }
+        }
         #endregion
     }
 }
