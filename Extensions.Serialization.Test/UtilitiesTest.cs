@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using CsvHelper.Configuration;
 using Xunit;
@@ -33,9 +34,39 @@ namespace Extensions.Serialization.Test
         }
 
         [Fact]
+        public void SerializeToXmlDoc()
+        {
+            var tested = PersonsList.SerializeToXmlDoc();
+
+            var navigator = tested.CreateNavigator();
+
+            Assert.Equal(5, (double)navigator.Evaluate("count(//FirstName)"));
+            Assert.Equal(5, (double)navigator.Evaluate("count(//Age)"));
+            Assert.Equal(27, (double)(navigator.Evaluate("sum(/ArrayOfPerson/Person[FirstName=\"Alex\"]/Age/text())")));
+            Assert.Equal(35, (double)(navigator.Evaluate("sum(/ArrayOfPerson/Person[FirstName=\"Cloe\"]/Age/text())")));
+            Assert.Equal(45, (double)(navigator.Evaluate("sum(/ArrayOfPerson/Person[FirstName=\"Jack\"]/Age/text())")));
+            Assert.Equal(30, (double)(navigator.Evaluate("sum(/ArrayOfPerson/Person[FirstName=\"John\"]/Age/text())")));
+        }
+
+        [Fact]
         public void DeserializeXDoc()
         {
             var input = XDocument.Parse(Properties.Resources.ArrayOfPerson);
+            var received = input.Deserialize<List<Person>>();
+
+            Assert.Equal(4, received.Count);
+            Assert.Equal(27, received[0].Age);
+            Assert.Equal(45, received[1].Age);
+            Assert.Equal(35, received[2].Age);
+            Assert.Equal(30, received[3].Age);
+        }
+
+        [Fact]
+        public void DeserializeXmlDoc()
+        {
+            var input = new XmlDocument();
+            input.LoadXml(Properties.Resources.ArrayOfPerson);
+
             var received = input.Deserialize<List<Person>>();
 
             Assert.Equal(4, received.Count);
@@ -182,6 +213,7 @@ namespace Extensions.Serialization.Test
 
             Assert.Equal("\"forename\",\"surname\",\"age\"\r\n\"Alex\",\"Friedman\",\"27\"\r\n\"Jack\",\"Bauer\",\"45\"\r\n\"Cloe\",\"O'Brien\",\"35\"\r\n\"John\",\"Doe\",\"30\"\r\n\"Grace\",\"Hooper\",\"111\"\r\n", serialized.ToString());
         }
+
         [Fact]
         public void ToCsvDeserializesProperlyWithCustomMapping()
         {
@@ -207,6 +239,54 @@ namespace Extensions.Serialization.Test
 
         }
 
+        [Fact]
+        public void ToCsvDeserializesWithCustomCulture()
+        {
+            var tested =
+                Properties.Resources.testStock.DeserializeFromCsv(new StockQuoteCsvClassMap(),
+                    CultureInfo.InvariantCulture).ToList();
+
+            Assert.Equal(2, tested.Count);
+            Assert.Equal(@"testStock", tested[0].Ticker);
+            Assert.Equal(20171110, tested[0].Date);
+            Assert.Equal(@"testStock", tested[1].Ticker);
+            Assert.Equal(20171120, tested[1].Date);
+        }
+
+        [Fact]
+        public void ToXmlDocCulture()
+        {
+            var Ticker = "TEST";
+            var open = 1.0;
+            var high = 1.8;
+            var low = .9;
+            var close = 1.2;
+            var volume = 11.0;
+
+            var tested = new StockQuote
+            {
+                Ticker = Ticker,
+                Open = open,
+                High = high,
+                Low = low,
+                Close = close,
+                Volume = volume
+            };
+
+            var result = tested.SerializeToXmlDoc();
+
+            var navigator = result.CreateNavigator();
+
+            Assert.Equal(1, (double)navigator.Evaluate("count(//Open)"));
+            Assert.Equal(1, (double)navigator.Evaluate("count(//High)"));
+            Assert.Equal(open, (double)(navigator.Evaluate("sum(/StockQuote/Open/text())")));
+            Assert.Equal(high, (double)(navigator.Evaluate("sum(/StockQuote/High/text())")));
+            Assert.Equal(low, (double)(navigator.Evaluate("sum(/StockQuote/Low/text())")));
+            Assert.Equal(close, (double)(navigator.Evaluate("sum(/StockQuote/Close/text())")));
+        }
+
+        #region Mocks
+
         public sealed class StockQuote
         {
             public string Ticker { get; set; }
@@ -231,20 +311,6 @@ namespace Extensions.Serialization.Test
                 Map(m => m.Volume).Name("<VOL>");
             }
         }
-        [Fact]
-        public void ToCsvDeserializesWithCustomCulture()
-        {
-            var tested =
-                Properties.Resources.testStock.DeserializeFromCsv(new StockQuoteCsvClassMap(),
-                    CultureInfo.InvariantCulture).ToList();
-
-            Assert.Equal(2, tested.Count);
-            Assert.Equal(@"testStock", tested[0].Ticker);
-            Assert.Equal(20171110, tested[0].Date);
-            Assert.Equal(@"testStock", tested[1].Ticker);
-            Assert.Equal(20171120, tested[1].Date);
-        }
-        #region Mocks
 
 
         public sealed class Person

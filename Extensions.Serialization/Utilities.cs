@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using CsvHelper;
@@ -96,10 +97,23 @@ namespace Extensions.Serialization
             var result = new XDocument();
             using (var writer = result.CreateWriter())
             {
-                var serializer =
-                    new XmlSerializer(source
-                        .GetType()); // use .GetType() instead of typeof(T) http://stackoverflow.com/a/2434558/3922292
+                var serializer = new XmlSerializer(source.GetType());
                 serializer.Serialize(writer, source);
+            }
+            return result;
+        }
+
+        public static XmlDocument SerializeToXmlDoc<T>(this T source)
+            where T : new()
+        {
+            var result = new XmlDocument();
+            using (var ms = new MemoryStream())
+            {
+                var serializer = new XmlSerializer(source.GetType());
+                serializer.Serialize(ms, source);
+                ms.Flush();
+                ms.Position = 0;
+                result.Load(ms);
             }
             return result;
         }
@@ -110,6 +124,21 @@ namespace Extensions.Serialization
             {
                 var deserializer = new XmlSerializer(typeof(T));
                 return (T)deserializer.Deserialize(reader);
+            }
+        }
+
+        public static T Deserialize<T>(this XmlDocument serialized)
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
+            using (MemoryStream xmlStream = new MemoryStream())
+            {
+                serialized.Save(xmlStream);
+                xmlStream.Flush();
+                xmlStream.Position = 0;
+                using (TextReader reader = new StreamReader(xmlStream))
+                {
+                    return (T)xmlSerializer.Deserialize(reader);
+                }
             }
         }
 
