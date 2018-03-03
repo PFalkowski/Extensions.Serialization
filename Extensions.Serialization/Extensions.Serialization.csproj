@@ -6,14 +6,13 @@
     <Authors>Piotr Falkowski</Authors>
     <Copyright>Piotr Falkowski © 2018</Copyright>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-    <Description>Package for boilerplate serialization code, containing following extensions: SerializeToXDoc, Deserialize, ToCsv.
-Third party lib "CsvHelper" licenced under dual licence MS-PL / Apache-2.0: http://www.opensource.org/licenses/MS-PL http://opensource.org/licenses/Apache-2.0</Description>
+    <Description>Serialize and deserialize easly from XDocument, XmlDocument and CSV.</Description>
     <PackageProjectUrl>https://github.com/PFalkowski/Extensions.Serialization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/PFalkowski/Extensions.Serialization</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.1.0</Version>
+    <Version>3.2.0</Version>
     <PackageTags>serialization,netcore,netstandard,xml,csv,extension-methods</PackageTags>
-    <PackageReleaseNotes>Add optional parameter to provide culture info. Default is CurrentCulture</PackageReleaseNotes>
+    <PackageReleaseNotes>Add SerializeToXmlDoc and Deserialize(XmlDocument) extensions</PackageReleaseNotes>
     <Company />
   </PropertyGroup>
 
