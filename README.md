@@ -3,7 +3,11 @@ Package for boilerplate serialization code, containing extensions like ToCsv, Se
 Usage:
 
 ```c#
-var csv = someList.ToCsv();
-var xdc = someList.SerializeToXDoc();
-var obj = someXDoc.Deserialize<Persons>()
+string csv = anything.SerializeToCsv();
+XDocument xDoc = anything.SerializeToXDoc();
+XmlDocument xmlDoc = anything.SerializeToXmlDoc();
+
+Persons person = csv.DeserializeFromCsv<Persons>();
+Persons person = xDoc.Deserialize<Persons>();
+Persons person = xmlDoc.Deserialize<Persons>();
 ```
