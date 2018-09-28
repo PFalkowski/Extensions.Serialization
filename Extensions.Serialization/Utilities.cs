@@ -92,55 +92,6 @@ namespace Extensions.Serialization
         }
 
 
-        public static XDocument SerializeToXDoc<T>(this T source)
-        {
-            var result = new XDocument();
-            using (var writer = result.CreateWriter())
-            {
-                var serializer = new XmlSerializer(source.GetType());
-                serializer.Serialize(writer, source);
-            }
-            return result;
-        }
-
-        public static XmlDocument SerializeToXmlDoc<T>(this T source)
-            where T : new()
-        {
-            var result = new XmlDocument();
-            using (var ms = new MemoryStream())
-            {
-                var serializer = new XmlSerializer(source.GetType());
-                serializer.Serialize(ms, source);
-                ms.Flush();
-                ms.Position = 0;
-                result.Load(ms);
-            }
-            return result;
-        }
-
-        public static T Deserialize<T>(this XDocument serialized)
-        {
-            using (var reader = serialized.CreateReader())
-            {
-                var deserializer = new XmlSerializer(typeof(T));
-                return (T)deserializer.Deserialize(reader);
-            }
-        }
-
-        public static T Deserialize<T>(this XmlDocument serialized)
-        {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
-            using (MemoryStream xmlStream = new MemoryStream())
-            {
-                serialized.Save(xmlStream);
-                xmlStream.Flush();
-                xmlStream.Position = 0;
-                using (TextReader reader = new StreamReader(xmlStream))
-                {
-                    return (T)xmlSerializer.Deserialize(reader);
-                }
-            }
-        }
 
         /// <summary>
         /// Use in code generation to turn <paramref name="input"/> into declaration of array of <typeparam>T</typeparam>
