@@ -11,40 +11,7 @@ namespace Extensions.Serialization.Test
     ///TODO: The Turkey Test http://www.moserware.com/2008/02/does-your-code-pass-turkey-test.html
     public class UtilitiesTest
     {
-        [Fact]
-        public void SerializeToXDocTest()
-        {
-            var tested = PersonsList.SerializeToXDoc();
-
-            var firstNames = new HashSet<string>(from e in tested.Descendants("FirstName") select e.Value);
-            var ages = new HashSet<int>(from e in tested.Descendants("Age") select int.Parse(e.Value));
-
-            Assert.Equal(5, firstNames.Count);
-            Assert.Equal(5, ages.Count);
-            Assert.Contains("Alex", firstNames);
-            Assert.Contains("Cloe", firstNames);
-            Assert.Contains("Jack", firstNames);
-            Assert.Contains("John", firstNames);
-            Assert.Contains("Grace", firstNames);
-            Assert.Contains(27, ages);
-            Assert.Contains(35, ages);
-            Assert.Contains(45, ages);
-            Assert.Contains(30, ages);
-        }
-
-        [Fact]
-        public void DeserializeXDoc()
-        {
-            var input = XDocument.Parse(Properties.Resources.ArrayOfPerson);
-            var received = input.Deserialize<List<Person>>();
-
-            Assert.Equal(4, received.Count);
-            Assert.Equal(27, received[0].Age);
-            Assert.Equal(45, received[1].Age);
-            Assert.Equal(35, received[2].Age);
-            Assert.Equal(30, received[3].Age);
-        }
-
+        
         [Fact]
         public void ToCsvTest2()
         {

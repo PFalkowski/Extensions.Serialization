@@ -91,27 +91,6 @@ namespace Extensions.Serialization
         }
 
 
-        public static XDocument SerializeToXDoc<T>(this T source)
-        {
-            var result = new XDocument();
-            using (var writer = result.CreateWriter())
-            {
-                var serializer =
-                    new XmlSerializer(source
-                        .GetType()); // use .GetType() instead of typeof(T) http://stackoverflow.com/a/2434558/3922292
-                serializer.Serialize(writer, source);
-            }
-            return result;
-        }
-
-        public static T Deserialize<T>(this XDocument serialized)
-        {
-            using (var reader = serialized.CreateReader())
-            {
-                var deserializer = new XmlSerializer(typeof(T));
-                return (T)deserializer.Deserialize(reader);
-            }
-        }
 
         /// <summary>
         /// Use in code generation to turn <paramref name="input"/> into declaration of array of <typeparam>T</typeparam>
