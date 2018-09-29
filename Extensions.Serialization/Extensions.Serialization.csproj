@@ -10,9 +10,9 @@
     <PackageProjectUrl>https://github.com/PFalkowski/Extensions.Serialization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/PFalkowski/Extensions.Serialization</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.2.0</Version>
+    <Version>3.3.0</Version>
     <PackageTags>serialization,netcore,netstandard,xml,csv,extension-methods</PackageTags>
-    <PackageReleaseNotes>Add SerializeToXmlDoc and Deserialize(XmlDocument) extensions</PackageReleaseNotes>
+    <PackageReleaseNotes>Split NuGet into two new: Extensions.Serialization.Xml and Extensions.Serialization.Csv. Obsolete methods in Extensions.Serialization, redirect calls. If you use only Xml methods, install Extensions.Serialization directly, tha same goes for Csv.</PackageReleaseNotes>
     <Company>Piotr Falkowski</Company>
     <PackageId>Extensions.Serialization</PackageId>
   </PropertyGroup>

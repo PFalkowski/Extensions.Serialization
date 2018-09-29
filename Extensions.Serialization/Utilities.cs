@@ -16,33 +16,33 @@ namespace Extensions.Serialization
     public static partial class Utilities
     {
         #region Xml
-        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this, this version will be removed in future releases.")]
         public static XDocument SerializeToXDoc<T>(this T source)
         {
             return Xml.Utilities.SerializeToXDoc(source);
         }
-        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this, this version will be removed in future releases.")]
         public static XmlDocument SerializeToXmlDoc<T>(this T source)
             where T : new()
         {
             return Xml.Utilities.SerializeToXmlDoc(source);
         }
-        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this, this version will be removed in future releases.")]
         public static T Deserialize<T>(this XDocument serialized)
         {
             return Xml.Utilities.Deserialize<T>(serialized);
         }
-        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this, this version will be removed in future releases.")]
         public static T Deserialize<T>(this XmlDocument serialized)
         {
             return Xml.Utilities.Deserialize<T>(serialized);
         }
-        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this, this version will be removed in future releases.")]
         public static XmlDocument ToXmlDocument(this XDocument xDocument)
         {
             return Xml.Utilities.ToXmlDocument(xDocument);
         }
-        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this, this version will be removed in future releases.")]
         public static XDocument ToXDocument(this XmlDocument xmlDocument)
         {
             return Xml.Utilities.ToXDocument(xmlDocument);
@@ -50,18 +50,18 @@ namespace Extensions.Serialization
         #endregion
 
          #region  Csv
-        [Obsolete("Use Extensions.Serialization.Csv version instead of this")]
+        [Obsolete("Use Extensions.Serialization.Csv version instead of this, this version will be removed in future releases.")]
         public static string SerializeToCsv<T>(this IEnumerable<T> input, string separator = ",", char? quotation = null, CultureInfo info = null)
         {
             return Csv.Utilities.SerializeToCsv(input, separator, quotation, info);
         }
-        [Obsolete("Use Extensions.Serialization.Csv version instead of this")]
+        [Obsolete("Use Extensions.Serialization.Csv version instead of this, this version will be removed in future releases.")]
         public static string SerializeToCsv<T>(this IEnumerable<T> input, ClassMap<T> propertiesMap, string separator = ",",
             char? quotation = null, CultureInfo info = null)
         {
             return Csv.Utilities.SerializeToCsv(input, propertiesMap, separator, quotation, info);
         }
-        [Obsolete("Use Extensions.Serialization.Csv version instead of this")]
+        [Obsolete("Use Extensions.Serialization.Csv version instead of this, this version will be removed in future releases.")]
         public static IEnumerable<T> DeserializeFromCsv<T>(this string csvContents, ClassMap<T> propertiesMap = null, CultureInfo info = null)
         {
             return Csv.Utilities.DeserializeFromCsv(csvContents, propertiesMap, info);
