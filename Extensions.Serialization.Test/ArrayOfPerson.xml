@@ -19,4 +19,9 @@
     <LastName>Doe</LastName>
     <Age>30</Age>
   </Person>
+  <Person>
+    <FirstName>Grace</FirstName>
+    <LastName>Hooper</LastName>
+    <Age>18</Age>
+  </Person>
 </ArrayOfPerson>

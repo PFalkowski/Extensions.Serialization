@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -14,6 +15,39 @@ namespace Extensions.Serialization
 {
     public static partial class Utilities
     {
+        #region Xml
+        public static XDocument SerializeToXDoc<T>(this T source)
+        {
+            return Xml.Utilities.SerializeToXDoc(source);
+        }
+
+        public static XmlDocument SerializeToXmlDoc<T>(this T source)
+            where T : new()
+        {
+            return Xml.Utilities.SerializeToXmlDoc(source);
+        }
+
+        public static T Deserialize<T>(this XDocument serialized)
+        {
+            return Xml.Utilities.Deserialize<T>(serialized);
+        }
+
+        public static T Deserialize<T>(this XmlDocument serialized)
+        {
+            return Xml.Utilities.Deserialize<T>(serialized);
+        }
+
+        public static XmlDocument ToXmlDocument(this XDocument xDocument)
+        {
+            return Xml.Utilities.ToXmlDocument(xDocument);
+        }
+
+        public static XDocument ToXDocument(this XmlDocument xmlDocument)
+        {
+            return Xml.Utilities.ToXDocument(xmlDocument);
+        }
+        #endregion
+
         private static string ToCsvLine<T>(this IEnumerable<T> input, char separator = ',', char? quotation = null)
         {
             if (input == null) return null;
