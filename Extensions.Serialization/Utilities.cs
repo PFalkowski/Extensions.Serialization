@@ -16,36 +16,56 @@ namespace Extensions.Serialization
     public static partial class Utilities
     {
         #region Xml
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
         public static XDocument SerializeToXDoc<T>(this T source)
         {
             return Xml.Utilities.SerializeToXDoc(source);
         }
-
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
         public static XmlDocument SerializeToXmlDoc<T>(this T source)
             where T : new()
         {
             return Xml.Utilities.SerializeToXmlDoc(source);
         }
-
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
         public static T Deserialize<T>(this XDocument serialized)
         {
             return Xml.Utilities.Deserialize<T>(serialized);
         }
-
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
         public static T Deserialize<T>(this XmlDocument serialized)
         {
             return Xml.Utilities.Deserialize<T>(serialized);
         }
-
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
         public static XmlDocument ToXmlDocument(this XDocument xDocument)
         {
             return Xml.Utilities.ToXmlDocument(xDocument);
         }
-
+        [Obsolete("Use Extensions.Serialization.Xml version instead of this")]
         public static XDocument ToXDocument(this XmlDocument xmlDocument)
         {
             return Xml.Utilities.ToXDocument(xmlDocument);
         }
+        #endregion
+
+         #region  Csv
+        [Obsolete("Use Extensions.Serialization.Csv version instead of this")]
+        public static string SerializeToCsv<T>(this IEnumerable<T> input, string separator = ",", char? quotation = null, CultureInfo info = null)
+        {
+            return Csv.Utilities.SerializeToCsv(input, separator, quotation, info);
+        }
+        [Obsolete("Use Extensions.Serialization.Csv version instead of this")]
+        public static string SerializeToCsv<T>(this IEnumerable<T> input, ClassMap<T> propertiesMap, string separator = ",",
+            char? quotation = null, CultureInfo info = null)
+        {
+            return Csv.Utilities.SerializeToCsv(input, propertiesMap, separator, quotation, info);
+        }
+        [Obsolete("Use Extensions.Serialization.Csv version instead of this")]
+        public static IEnumerable<T> DeserializeFromCsv<T>(this string csvContents, ClassMap<T> propertiesMap = null, CultureInfo info = null)
+        {
+            return Csv.Utilities.DeserializeFromCsv(csvContents, propertiesMap, info);
+        } 
         #endregion
 
         private static string ToCsvLine<T>(this IEnumerable<T> input, char separator = ',', char? quotation = null)
@@ -74,58 +94,6 @@ namespace Extensions.Serialization
                 return csv.ToString(0, csv.Length - 1);
             return string.Empty;
         }
-
-        public static string SerializeToCsv<T>(this IEnumerable<T> input, string separator = ",", char? quotation = null, CultureInfo info = null)
-        {
-            return SerializeToCsv(input, null, separator, quotation, info);
-        }
-
-        public static string SerializeToCsv<T>(this IEnumerable<T> input, ClassMap<T> propertiesMap, string separator = ",",
-            char? quotation = null, CultureInfo info = null)
-        {
-            if (input == null) return null;
-            var stb = new StringBuilder();
-            using (var writer = new CsvWriter(new StringWriter(stb), false))
-            {
-                writer.Configuration.Delimiter = separator;
-                writer.Configuration.SanitizeForInjection = true;
-                if (quotation.HasValue)
-                {
-                    writer.Configuration.QuoteAllFields = true;
-                    writer.Configuration.Quote = quotation.Value;
-                }
-                else
-                {
-                    writer.Configuration.QuoteAllFields = false;
-                }
-                if (info != null)
-                {
-                    writer.Configuration.CultureInfo = info;
-                }
-
-                if (propertiesMap != null)
-                {
-                    writer.Configuration.RegisterClassMap(propertiesMap);
-                }
-                writer.WriteRecords(input);
-                writer.Flush();
-            }
-            return stb.ToString();
-        }
-
-        public static IEnumerable<T> DeserializeFromCsv<T>(this string csvContents, ClassMap<T> propertiesMap = null, CultureInfo info = null)
-        {
-            IEnumerable<T> result;
-            using (var csv = new CsvReader(new StringReader(csvContents), false))
-            {
-                if (propertiesMap != null) { csv.Configuration.RegisterClassMap(propertiesMap); }
-                if (info != null) { csv.Configuration.CultureInfo = info; }
-                result = csv.GetRecords<T>().ToList();
-            }
-            return result;
-        }
-
-
 
         /// <summary>
         /// Use in code generation to turn <paramref name="input"/> into declaration of array of <typeparam>T</typeparam>

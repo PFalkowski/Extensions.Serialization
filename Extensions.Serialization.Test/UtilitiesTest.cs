@@ -1,5 +1,4 @@
 using CsvHelper.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -154,15 +153,6 @@ namespace Extensions.Serialization.Test
         #endregion
 
         [Fact]
-        public void ToCsvTest2()
-        {
-            var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
-            var tested = values.SerializeToXDoc();
-            var csv = values.SerializeToCsv();
-            const string expected = "\"1,123\"\r\n\"2,123\"\r\n\"3,234\"\r\n\"4,532\"\r\n\"5,723\"\r\n";
-            Assert.Equal(expected, csv.ToString());
-        }
-        [Fact]
         public void WriteToNewArray0()
         {
             int[] ints = null;
@@ -213,14 +203,22 @@ namespace Extensions.Serialization.Test
             s = arr.WriteToNewArray();
             Assert.Equal("Char[] array = new Char[] {\'a\',\'d\',\'\\\'};", s);
         }
+        #region Csv
 
-
+        [Fact]
+        public void ToCsvTest2()
+        {
+            var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
+            var tested = values.SerializeToXDoc();
+            var csv = values.SerializeToCsv();
+            const string expected = "\"1,123\"\r\n\"2,123\"\r\n\"3,234\"\r\n\"4,532\"\r\n\"5,723\"\r\n";
+            Assert.Equal(expected, csv.ToString());
+        }
         [Fact]
         public void FromCsvDeserializesProperly()
         {
             var tested = @"""FirstName"",""LastName"",""Age""
 ""Grace"",""Hopper"",""10""";
-            //var tested = "\"Grace\",\"Hopper\", \"10\"";
             var deserialized = tested.DeserializeFromCsv<Person>();
         }
 
@@ -238,15 +236,6 @@ namespace Extensions.Serialization.Test
 
             var result = tested.SerializeToCsv();
         }
-
-        //        [Fact]
-        //        public void FromCsvDeserializesProperly2()
-        //        {
-        //            var tested = @"""FirstName"",""LastName"",""Age""
-        //""Grace"",""Hopper"",""10.0""";
-        //            //var tested = "\"Grace\",\"Hopper\", \"10\"";
-        //            var deserialized = tested.DeserializeFromCsv<Person>(info: CultureInfo.InvariantCulture);
-        //        }
 
         [Fact]
         public void ToCsvDSrializesProperlyWithDefaults()
@@ -330,7 +319,8 @@ namespace Extensions.Serialization.Test
             Assert.Equal(@"testStock", tested[1].Ticker);
             Assert.Equal(20171120, tested[1].Date);
         }
-
+        
+        #endregion
 
         #region Mocks
 
