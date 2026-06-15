@@ -210,8 +210,8 @@ namespace Extensions.Serialization.Test
         {
             var values = new[] { 1.123, 2.123, 3.234, 4.532, 5.723 };
             var tested = values.SerializeToXDoc();
-            var csv = values.SerializeToCsv();
-            const string expected = "\"1,123\"\r\n\"2,123\"\r\n\"3,234\"\r\n\"4,532\"\r\n\"5,723\"\r\n";
+            var csv = values.SerializeToCsv(info: System.Globalization.CultureInfo.InvariantCulture);
+            const string expected = "1.123\r\n2.123\r\n3.234\r\n4.532\r\n5.723\r\n";
             Assert.Equal(expected, csv.ToString());
         }
         [Fact]
