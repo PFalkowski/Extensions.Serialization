@@ -1,4 +1,4 @@
-# Extensions.Serialization
+﻿# Extensions.Serialization
 
 [![CI](https://github.com/PFalkowski/Extensions.Serialization/actions/workflows/ci.yml/badge.svg)](https://github.com/PFalkowski/Extensions.Serialization/actions/workflows/ci.yml)
 [![NuGet version](https://img.shields.io/nuget/v/Extensions.Serialization.svg)](https://www.nuget.org/packages/Extensions.Serialization/)
@@ -13,6 +13,12 @@
 > - [`Extensions.Serialization.Csv`](https://www.nuget.org/packages/Extensions.Serialization.Csv/) — CSV helpers via CsvHelper
 
 All methods in this package are marked `[Obsolete]` and delegate to the above packages.
+
+## Install
+
+```bash
+dotnet add package Extensions.Serialization
+```
 
 ## Usage
 
