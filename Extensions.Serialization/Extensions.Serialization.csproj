@@ -1,26 +1,33 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <TargetFramework>net8.0</TargetFramework>
+    <PackageId>Extensions.Serialization</PackageId>
+    <Version>3.4.0</Version>
     <Authors>Piotr Falkowski</Authors>
-    <Copyright>Piotr Falkowski © 2018</Copyright>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-    <Description>Serialize and deserialize easly from XDocument, XmlDocument and CSV.</Description>
+    <Company>Piotr Falkowski</Company>
+    <Copyright>Piotr Falkowski © 2026</Copyright>
+    <Description>Serialize and deserialize easily from XDocument, XmlDocument and CSV. Facade package re-exporting Extensions.Serialization.Xml and Extensions.Serialization.Csv with [Obsolete] redirect methods.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/PFalkowski/Extensions.Serialization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/PFalkowski/Extensions.Serialization</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.3.0</Version>
     <PackageTags>serialization,netcore,netstandard,xml,csv,extension-methods</PackageTags>
-    <PackageReleaseNotes>Split NuGet into two new: Extensions.Serialization.Xml and Extensions.Serialization.Csv. Obsolete methods in Extensions.Serialization, redirect calls. If you use only Xml methods, install Extensions.Serialization directly, tha same goes for Csv.</PackageReleaseNotes>
-    <Company>Piotr Falkowski</Company>
-    <PackageId>Extensions.Serialization</PackageId>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Extensions.Serialization.Csv" Version="1.0.0" />
     <PackageReference Include="Extensions.Serialization.Xml" Version="1.0.0" />
-    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
